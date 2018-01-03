@@ -12,6 +12,7 @@
 * [RxSwiftのObservableとは何か](./2017/0919_rxswift_observable.md)
 * [iOS アプリ開発の全体像](./2017/0929_ios_app.md)
 * [Route53 で S3 バケットへ alias レコードを作った際のリダイレクトのふるまい](./2017/1202_amazon_s3_redirect.md)
+* [読書メーターiOSアプリにおける Xamarin.iOS 導入事例のご紹介](./2017/1223_xamarin_ios.md)
 * [RHEL7 系でのネットワーク設定](./2017/1228_rhel7_networking.md)
 * [RHEL7 系での Firewall 設定](./2017/1229_rhel7_firewalld.md)
 
