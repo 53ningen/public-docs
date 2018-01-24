@@ -20,3 +20,4 @@
 
 * [さくらVPSのL2スイッチを利用してローカルネットワークを構成する](./2018/0103_sakuravps_napt.md)
 * [特定ホストに対してのみ踏み台を経由して Ansible を実行する](./2018/0104_ansible_proxy.md)
+* [AWS Lambda を用いたウェブサイトの外形監視](./2018/0123_lambda_health_check.md)
