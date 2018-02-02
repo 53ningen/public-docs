@@ -23,3 +23,4 @@
 * [Apach と nginx への HSTS 設定](./2018/0105_config_hsts.md)
 * [AWS Lambda を用いたウェブサイトの外形監視](./2018/0123_lambda_health_check.md)
 * [GNU-Coreutils touch コマンドの実装を読む](./2018/0128_touch_impl.md)
+* [ansible-lint を CI に組み込む](./2018/0203_ansible-lint.md)
