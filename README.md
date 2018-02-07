@@ -1,6 +1,10 @@
 * 書いた記事のなかで長めのものなどをバックアップ/マスタデータとして GitHub においている
 * 細かなあれこれの記事は[ゴミ箱](https://53ningen.com)においてある
 
+## Knowledge
+
+* [よく使うシェルスクリプト置き場](./knowledge/scripts.md)
+
 ## 2016
 
 * [RxSwiftライブラリの作り方](./2016/0414_rxswift_observable.md)

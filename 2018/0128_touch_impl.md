@@ -17,7 +17,7 @@ struct utimbuf {
 
 ### 基本的な実装
 
-単純に modtime を更新してやればよいので、次のように書けば良さそう
+単純に actime と modtime を更新してやればよいので、次のように書けば良さそう
 
 ```
 #include <stdio.h>
@@ -28,14 +28,12 @@ struct utimbuf {
 
 int main(int argc, char *argv[])
 {
-    struct utimbuf ubuf;
     if (argc != 2) {
         fprintf(stdout, "Usage: %s filename\n", argv[0]);
         exit(1);
     }
 
-    time(&ubuf.modtime);
-    if (utime(argv[1], &ubuf) < 0) {
+    if (utime(argv[1], NULL) < 0) {
         perror(argv[1]);
         exit(1);
     }
@@ -154,4 +152,47 @@ DESCRIPTION
        cision, respectively, when setting file timestamps.
 ```
 
-なるほど。`utime(2)` と比較して `utimensat(2)` はナノ秒単位での指定が可能なのですね。というわけで GNU-Coreutils の `touch` の内部では、`utimensat(2)` が呼ばれていることがわかりました。
+なるほど。`utime(2)` と比較して `utimensat(2)` はナノ秒単位での指定が可能なのですね。というわけで GNU-Coreutils の `touch` の内部では、`utimensat(2)` が呼ばれていることがわかりました。ちなみに strace をよべば、ソースコード読まなくても普通にわかる。
+
+```
+$ strace touch hoge
+execve("/usr/bin/touch", ["touch", "hoge"], [/* 21 vars */]) = 0
+brk(0)                                  = 0x1885000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fd4facb7000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=23314, ...}) = 0
+mmap(NULL, 23314, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fd4facb1000
+close(3)                                = 0
+open("/lib64/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0@\34\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=2118128, ...}) = 0
+mmap(NULL, 3932672, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fd4fa6d8000
+mprotect(0x7fd4fa88e000, 2097152, PROT_NONE) = 0
+mmap(0x7fd4faa8e000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b6000) = 0x7fd4faa8e000
+mmap(0x7fd4faa94000, 16896, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fd4faa94000
+close(3)                                = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fd4facb0000
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fd4facae000
+arch_prctl(ARCH_SET_FS, 0x7fd4facae740) = 0
+mprotect(0x7fd4faa8e000, 16384, PROT_READ) = 0
+mprotect(0x60d000, 4096, PROT_READ)     = 0
+mprotect(0x7fd4facb8000, 4096, PROT_READ) = 0
+munmap(0x7fd4facb1000, 23314)           = 0
+brk(0)                                  = 0x1885000
+brk(0x18a6000)                          = 0x18a6000
+brk(0)                                  = 0x18a6000
+open("/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=106070960, ...}) = 0
+mmap(NULL, 106070960, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fd4f41af000
+close(3)                                = 0
+open("hoge", O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK, 0666) = 3
+dup2(3, 0)                              = 0
+close(3)                                = 0
+utimensat(0, NULL, NULL, 0)             = 0
+close(0)                                = 0
+close(1)                                = 0
+close(2)                                = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
+```
