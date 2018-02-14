@@ -3,7 +3,7 @@ GNU-Coreutils touch コマンドの実装を読む
 
 　基本的に `utime(2)` を使えば良さそうなので、実装が楽そうだし、自分で書いて見つつ、GNU-Coreutils の実装を眺めてみるかなという気持ちになったので挑戦。`utime(2)` は次のようなインターフェースを持っている。
 
-```
+```c
 #include <sys/types.h>
 #include <utime.h>
 
@@ -19,7 +19,7 @@ struct utimbuf {
 
 単純に actime と modtime を更新してやればよいので、次のように書けば良さそう
 
-```
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
 これだと `-c` をつけたときの no_create モードの振る舞いになってしまうので、ちょっとだけ手を加えて、ファイルがなかったときには作成する振る舞いを追加してあげればだいたいあってるかなと思いつつ、ソースコードを覗きにいく。GNU-Coreutils のソースコードは[こちら](https://github.com/Coreutils/Coreutils/blob/master/src/touch.c#L122-L204)。実処理部は、短くてそんなに複雑なことやってないので読みやすい。
 
-```
+```c
 if (STREQ (file, "-"))
   fd = STDOUT_FILENO;
 else if (! (no_create || no_dereference))
@@ -67,7 +67,7 @@ else if (! (no_create || no_dereference))
 
 まずは、ファイルディスクリプタの取得から、標準入力かそうでないかみたいな分岐。普通にファイルから読むときは、ファイルがなかったら作成も行う。`no_create` は `-c` オプション時にフラグが立つ。また `no_dereference` は、`-h` オプション。それぞれのオプションは次のように定義されている。
 
-```
+```c
 /* (-c) If true, don't create if not already there.  */
 static bool no_create;
 
@@ -77,7 +77,7 @@ static bool no_dereference;
 
 続いて細々とした調整。どの time を書き換えますかみたいな話。`-a`, `-m`, `--times` オプションで色々いじれる。詳細は man をみてください。
 
-```
+```c
 /* Bitmasks for `change_times'. */
 #define CH_ATIME 1
 #define CH_MTIME 2
@@ -107,7 +107,7 @@ if (amtime_now)
 
 実処理部はこんな感じになってて、`utime(2)` を直接呼び出しているわけではなかった。
 
-```
+```c
 ok = (fdutimensat (fd, AT_FDCWD, (fd == STDOUT_FILENO ? NULL : file), t,
                    (no_dereference && fd == -1) ? AT_SYMLINK_NOFOLLOW : 0)
       == 0);
@@ -115,7 +115,7 @@ ok = (fdutimensat (fd, AT_FDCWD, (fd == STDOUT_FILENO ? NULL : file), t,
 
 というわけで [fdutimensat の実装](https://github.com/Coreutils/gnulib/blob/master/lib/fdutimensat.c)をみにいくとこんな感じ。
 
-```
+```c
 int
 fdutimensat (int fd, int dir, char const *file, struct timespec const ts[2],
              int atflag)
@@ -136,7 +136,7 @@ fdutimensat (int fd, int dir, char const *file, struct timespec const ts[2],
 
 ファイルに対してはさらに `utimensat(2)` を呼んでいるようなので、man をみる。
 
-```
+```c
 utimensat, futimens - change file timestamps with nanosecond precision
 
 #include <fcntl.h> /* Definition of AT_* constants */
@@ -154,7 +154,7 @@ DESCRIPTION
 
 なるほど。`utime(2)` と比較して `utimensat(2)` はナノ秒単位での指定が可能なのですね。というわけで GNU-Coreutils の `touch` の内部では、`utimensat(2)` が呼ばれていることがわかりました。ちなみに strace をよべば、ソースコード読まなくても普通にわかる。
 
-```
+```sh
 $ strace touch hoge
 execve("/usr/bin/touch", ["touch", "hoge"], [/* 21 vars */]) = 0
 brk(0)                                  = 0x1885000
