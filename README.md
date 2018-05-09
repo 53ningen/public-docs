@@ -31,4 +31,5 @@
 * [ansible-lint を CI に組み込む](./2018/0203_ansible-lint.md)
 * [ファイルシステムのマウント](./2018/0412_fstab.md)
 * [inode を枯渇させる](./2018/0414_inode.md)
+* [寝てる間に MacBook の環境構築を終わらせる](./2018/0420_mac_ansible.md)
 * [XenServer 7.4 のインストール](./2018/0509_install_xenserver.md)
