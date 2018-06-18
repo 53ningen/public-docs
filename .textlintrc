@@ -1,0 +1,38 @@
+{
+  "rules": {
+    "max-ten": {
+      "max": 7
+    },
+    "max-kanji-continuous-len": {
+      max: 6,
+      allow: ["倍精度浮動小数点数"]
+    },
+    "no-doubled-joshi": {
+      "min_interval" : 1,
+      "strict": false,
+      "allow": []
+    },
+    "sentence-length": {
+      "max": 150
+    },
+    "textlint-rule-max-appearence-count-of-words": {
+      "limit": 5
+    },
+    "no-double-negative-ja": true,
+    "spellcheck-tech-word": false,
+    "no-dropping-the-ra": true,
+    "no-mix-dearu-desumasu": true,
+    "no-hankaku-kana": true,
+    "ja-no-weak-phrase": true,
+    "ja-no-redundant-expression": true,
+    "ja-no-abusage": true,
+    "no-mixed-zenkaku-and-hankaku-alphabet": true,
+    "@textlint-ja/textlint-rule-no-insert-dropping-sa": true,
+    textlint-rule-ja-hiragana-hojodoushi,
+    "prefer-tari-tari": true,
+    "ja-unnatural-alphabet": true,
+    "ja-hiragana-keishikimeishi": true,
+    "ja-hiragana-fukushi": true,
+    "ja-hiragana-hojodoushi": true
+  }
+}
