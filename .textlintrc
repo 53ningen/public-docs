@@ -10,7 +10,7 @@
     "no-doubled-joshi": {
       "min_interval" : 1,
       "strict": false,
-      "allow": []
+      "allow": ["が", "に"]
     },
     "sentence-length": {
       "max": 150

@@ -4,7 +4,7 @@ Apach と nginx への HSTS 設定
 ## HSTS(HTTP Strict Transport Security)とは?
 
 * SSL に対応しているウェブサーバーへの HTTP リクエストに対し、サーバー側がレスポンスヘッダに SSL 通信が可能であることを表すデータを付与することにより、ブラウザに HTTPS での通信を行うことを促す仕組みを HSTS とよぶ
-* RFC6797 で定義される: https://tools.ietf.org/html/rfc6797
+* RFC 6797 で定義される: https://tools.ietf.org/html/rfc6797
 * preload と併用することにより 301 でリダイレクト先を指定する際、そのリダイレクト先が改ざんされていないことを保証できない欠点を補える
 
 ## 技術的な仕組み
