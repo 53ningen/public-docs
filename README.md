@@ -33,3 +33,4 @@
 * [inode を枯渇させる](./2018/0414_inode.md)
 * [寝てる間に MacBook の環境構築を終わらせる](./2018/0420_mac_ansible.md)
 * [XenServer 7.4 のインストール](./2018/0509_install_xenserver.md)
+* [CentOS 7 上で ASP.NET Core アプリケーションを動かす](2018/0622_aspnetcore_on_linux.md)
