@@ -1,4 +1,4 @@
-# Lambda のイベントソースを SQS として設定する
+# Lambda のイベントソースとして SQS を設定する
 
 2018/06/28 の記事 [AWS Lambda Adds Amazon Simple Queue Service to Supported Event Sources | AWS News Blog](https://aws.amazon.com/jp/blogs/aws/aws-lambda-adds-amazon-simple-queue-service-to-supported-event-sources/) にて AWS Lambda が Amazon SQS をイベントソースとしてサポートしたという話を見かけたので試してみました。
 
@@ -140,8 +140,25 @@ REPORT RequestId: 3a1b6e79-7146-564b-94df-3dcc11b9f161	Duration: 3.00 ms	Billed 
 
 
 ## 気になったこと
+### Lambda 関数がエラーを返した場合の SQS メッセージ
+
+Lambda 関数がエラーを返した場合 SQS メッセージはどうなるのでしょうか。下記のようなコードで実験をしてみます。
+
+```
+exports.handler = async (event) => {
+    throw "Error";
+};
+```
+
+結果、メッセージは SQS キューから削除されず、可視性タイムアウトが過ぎたのちに再度処理が行われる挙動となっていました。期待しているとおりの結果ではありますが、無限ループが発生しうるので必ずデッドレターキューの設定をしておいたほうが無難です。
+
+
 ### FIFO キューは Lambda 関数のイベントソースとして利用できるのか
 
 us-east-1 リージョンで試したところ、現状 Lambda の設定より SQS をイベントソースとして選択したときに、選択可能な SQS キューの一覧に FIFO キューは表示されずコンソールから設定することは不可能でした。
 
 そもそも Lambda をワーカーにして同時実行する場合、FIFO である必要なくなるのであまり困るようなシチュエーションはなさそうですが、気になったので確認してみました。
+
+[News Blog](https://aws.amazon.com/jp/blogs/aws/aws-lambda-adds-amazon-simple-queue-service-to-supported-event-sources/) にも以下のように書かれている。
+
+> At the moment the Lambda triggers only work with standard queues and not FIFO queues.
