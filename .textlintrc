@@ -13,7 +13,7 @@
       "allow": ["が", "に"]
     },
     "sentence-length": {
-      "max": 150
+      "max": 300
     },
     "textlint-rule-max-appearence-count-of-words": {
       "limit": 5
