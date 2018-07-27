@@ -35,3 +35,4 @@
 * [XenServer 7.4 のインストール](./2018/0509_install_xenserver.md)
 * [CentOS 7 上で ASP.NET Core アプリケーションを動かす](2018/0622_aspnetcore_on_linux.md)
 * [Lambda のイベントソースとして SQS を設定する](2018/0703_sqs_lambda.md)
+* [MariaDB から RDS for MariaDB へのレプリケーション](2018/0727_mariadb_repl.md)
